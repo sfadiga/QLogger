@@ -119,7 +119,7 @@ cons.outputType=console
 cons.logMask=time:%t owner:%o level:%l function:%f line:%n message:%m
 -------------------------------------------------------------------------------
 
-This small readme covered almos everything QLogger is capable of do, there are some
+This small readme covered almost everything QLogger is capable to do, there are some
 other configurations and details, but they are pretty straight forward to understand
 by reading the code.
 
