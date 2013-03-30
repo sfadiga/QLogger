@@ -76,7 +76,8 @@ private:
     {
         QDir::setCurrent(dir.absolutePath());
         QStringList list = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-        for (int i = 0; i < list.size(); ++i)
+        const int size = list.size();
+        for(int i = 0; i < size ; ++i)
         {
             QString path = list.at(i);
             if(found)
@@ -114,9 +115,10 @@ protected:
                                            QMultiHash<QString, Configuration*> &loggers)
     {
         QList<QString> configs = ownerConfigLines.keys();
-        QString currentConfig = "";
+        QString currentConfig = QString();
         bool localTest = false; // the loggers reference could already been filled from somewhere else
-        for(int i = 0 ; i < configs.size() ; i++)
+        const int size = configs.size();
+        for(int i = 0 ; i < size ; i++)
         {
             QString config = configs.at(i);
             if(currentConfig != config)
@@ -135,17 +137,17 @@ protected:
         // parsing a structure like ( key=value ) * N
         Configuration::Level level = Configuration::q1ERROR;
         Configuration::OutputType outputType = Configuration::CONSOLE;
-        QString logMask = "";
+        QString logMask = QString();
         int maxFileSize = 0;
-        QString path = "";
-        QString timestampFormat = "";
-        QString fileName = "";
-        QString fileNameTimestamp = "";
+        QString path = QString();
+        QString timestampFormat = QString();
+        QString fileName = QString();
+        QString fileNameTimestamp = QString();
         foreach(QString line , lines)
         {
             QStringList configList = line.trimmed().split("=");
-            QString key = configList.isEmpty() ? "" : configList.at(0); // left hand
-            QString paramValue = configList.size() < 1 ? "" : configList.at(1); //right hand
+            QString key = configList.isEmpty() ? QString() : configList.at(0); // left hand
+            QString paramValue = configList.size() < 1 ? QString() : configList.at(1); //right hand
             if(key == LEVEL)
             {
                 level = Configuration::levelFromString(paramValue);
@@ -215,7 +217,7 @@ public:
                 if(!configLine.trimmed().isEmpty() && !configLine.trimmed().startsWith("#"))
                 {
                     QStringList temp = configLine.split("."); // separate the owner.key=value
-                    QString owner = temp.isEmpty() ? "" : temp.at(0);
+                    QString owner = temp.isEmpty() ? QString() : temp.at(0);
                     if(!owner.isEmpty() && temp.size() > 1)
                     {
                         ownerConfigLines.insert(owner, temp.at(1));

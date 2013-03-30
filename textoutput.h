@@ -54,24 +54,34 @@ public:
     //ConsoleOutput();
     virtual ~ConsoleOutput();
 
-    //!
-    virtual void write(QString message, QString owner, QString lvl, QString timestamp, QString functionName, int lineNumber);
-
-    //!
+    //! this method is responsible for write the log text in the selected output
+    virtual void write(const QString message,
+                       const QString owner,
+                       const QString lvl,
+                       const QString timestamp,
+                       const QString functionName,
+                       const int lineNumber);
+    //! implement from output
     virtual void close();
 
-    //!
+    //! return the current mask used to format the log text
     QString getLogTextMask() const;
 
 protected:
     //! the qt class to output texts
     QTextStream* qTextStream;
 
-    //!
+    //! the text mask used to format the log output
     QString logTextMask;
 
     //! uses the mask param and log message to generate the text string which will be logged out.
-    QString formatLogText(QString logFormatMask, QString message, QString owner, QString lvl, QString timestamp, QString functionName, int lineNumber);
+    QString formatLogText(const QString logFormatMask,
+                          const QString message,
+                          const QString owner,
+                          const QString lvl,
+                          const QString timestamp,
+                          const QString functionName,
+                          const int lineNumber);
 };
 
 //! this class is responsible for write plain text log messages for file or stdout (console)
@@ -82,19 +92,21 @@ public:
     //! This constructor sets the class to operate in text file mode, all logs will be written in a file
     TextFileOutput(QString logOwner, QString logFormatMask, QString filePath , int fileMaxSizeInKb , QString fileNameMask = TEXT_FILE_NAME_MASK,
                    QString fileNameTimestampFormat = FILE_NAME_TIMESTAMP_FORMAT);
-
-    //!
     virtual ~TextFileOutput();
 
     //! this method is responsible for write the log text in the selected output
-    virtual void write(QString message, QString level, QString owner, QString timestamp, QString functionName, int lineNumber);
+    virtual void write(const QString message,
+                       const QString owner,
+                       const QString lvl,
+                       const QString timestamp,
+                       const QString functionName,
+                       const int lineNumber);
 
-    //!
     virtual void close();
 
 protected:
     //! this method is used to generate a file name based on the application name, log owner and date time
-    QString getFileName();
+    QString getFileName() const;
 
     //! this method is called when a new file needs to be created due to size limitation
     virtual void createNextFile();
@@ -115,7 +127,6 @@ protected:
 
     //! the timestamp format to be used in the file name
     QString fileNameTimestampFormat;
-
 
     //! this attribute represents the current file being used, when in file mode, otherwise = NULL
     QFile* currentFile;

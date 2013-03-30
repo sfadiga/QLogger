@@ -26,26 +26,26 @@ namespace qlogger
 {
 
 Configuration::Configuration() :
-    logOwner(""), logLevel(Level(-1)), ouputType(OutputType(-1)), outputLog(NULL), timestampFormat("")
+    logOwner(QString()), logLevel(Level(-1)), outputType(OutputType(-1)), outputLog(NULL), timestampFormat(QString())
 {
 }
 
 Configuration::Configuration(QString logOwner,
               Configuration::Level lvl,
-              OutputType ouputType,
+              OutputType outputType,
               QString timestampFormat,
               QString logTextMask,
               QString fileNameMask,
               QString fileNameTimestampFormat,
               QString filePath,
               int fileMaxSizeInKb)
-    : logOwner(logOwner), logLevel(lvl), ouputType(ouputType), outputLog(NULL), timestampFormat(timestampFormat)
+    : logOwner(logOwner), logLevel(lvl), outputType(outputType), outputLog(NULL), timestampFormat(timestampFormat)
 {
 
     if(this->timestampFormat.isEmpty())
         this->timestampFormat = TIMESTAMP_QLOGGER_FORMAT;
 
-    switch(ouputType)
+    switch(outputType)
     {
         case XMLFILE:
             this->outputLog = new XmlOutput(logOwner, fileNameMask, fileNameTimestampFormat, filePath, fileMaxSizeInKb);
@@ -66,17 +66,16 @@ Configuration::~Configuration()
 
 bool Configuration::operator==(const Configuration &rh)
 {
-    return (this->logOwner == rh.logOwner && this->logLevel == rh.logLevel && this->ouputType == rh.ouputType);
+    return (this->logOwner == rh.logOwner && this->logLevel == rh.logLevel && this->outputType == rh.outputType);
 }
 
-
-QString Configuration::levelToString(Configuration::Level level)
+QString Configuration::levelToString(const Level level)
 {
     static const char* const buffer[] = { "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE" };
     return buffer[level];
 }
 
-Configuration::Level Configuration::levelFromString(QString level)
+Configuration::Level Configuration::levelFromString(const QString level)
 {
     QString lvl = level.trimmed().toUpper();
     if (lvl == "FATAL")
@@ -104,6 +103,36 @@ Configuration::Level Configuration::levelFromString(QString level)
         return Configuration::q1ERROR;
     }
 
+}
+
+const QString Configuration::getLogOwner() const
+{
+    return logOwner;
+}
+
+void Configuration::setLogOwner(const QString owner)
+{
+    this->logOwner = QString(owner);
+}
+
+Configuration::Level Configuration::getLogLevel() const
+{
+    return logLevel;
+}
+
+Configuration::OutputType Configuration::getOutputType() const
+{
+    return outputType;
+}
+
+Output* Configuration::getOutputLog() const
+{
+    return outputLog;
+}
+
+const QString Configuration::getTimestampFormat() const
+{
+    return timestampFormat;
 }
 
 }

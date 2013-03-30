@@ -55,15 +55,27 @@ QString ConsoleOutput::getLogTextMask() const
     return logTextMask;
 }
 
-void ConsoleOutput::write(QString message, QString owner, QString lvl, QString timestamp, QString functionName, int lineNumber)
+void ConsoleOutput::write(const QString message,
+                          const QString owner,
+                          const QString lvl,
+                          const QString timestamp,
+                          const QString functionName,
+                          const int lineNumber)
 {
     //QByteArray msg = QTextCodec::convertFromUnicode(); TODO correct the conversion to from utf-8 to the console output (local)
     *qTextStream << formatLogText(this->logTextMask, message, owner, lvl, timestamp, functionName, lineNumber) << endl;
 }
 
-QString ConsoleOutput::formatLogText(QString logFormatMask, QString message, QString owner, QString lvl, QString timestamp, QString functionName, int lineNumber)
+QString ConsoleOutput::formatLogText(const QString logFormatMask,
+                                     const QString message,
+                                     const QString owner,
+                                     const QString lvl,
+                                     const QString timestamp,
+                                     const QString functionName,
+                                     const int lineNumber)
 {
-    QString text = logFormatMask.replace("%t", timestamp);
+    QString text = QString(logFormatMask);
+    text = text.replace("%t", timestamp);
     text = text.replace("%m", message);
     text = text.replace("%l", lvl);
     text = text.replace("%o", owner);
@@ -140,7 +152,7 @@ void TextFileOutput::createNextFile()
 }
 
 
-QString TextFileOutput::getFileName()
+QString TextFileOutput::getFileName() const
 {
     QString name = fileNameMask
             .arg(QCoreApplication::applicationName())
@@ -149,7 +161,12 @@ QString TextFileOutput::getFileName()
     return name;
 }
 
-void TextFileOutput::write(QString message, QString owner, QString lvl, QString timestamp, QString functionName, int lineNumber)
+void TextFileOutput::write(const QString message,
+                           const QString owner,
+                           const QString lvl,
+                           const QString timestamp,
+                           const QString functionName,
+                           const int lineNumber)
 {
     if(currentFile && currentFile->size() > fileMaxSizeInBytes)
     {

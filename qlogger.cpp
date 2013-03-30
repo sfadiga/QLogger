@@ -62,11 +62,12 @@ QLogger::~QLogger()
 
 void QLogger::close()
 {
-	QList<Configuration*> cfgList = loggers.values();
-	for (int i = 0 ; i < cfgList.size() ; i++)
+    QList<Configuration*> cfgList = loggers.values();
+    const int size = cfgList.size();
+    for (int i = 0 ; i < size ; i++)
 	{
 		Configuration* cfg = cfgList.at(i);
-		cfg->outputLog->close();
+        cfg->getOutputLog()->close();
 	}
 }
 
@@ -94,7 +95,7 @@ void QLogger::addLogger(QString logOwner, Configuration* configuration)
     mutex.lock();
     if(!QLogger::instance.load()->loggers.values(logOwner).contains(configuration))
     {
-        configuration->logOwner = logOwner; 
+        configuration->setLogOwner(logOwner);
         QLogger::instance.load()->loggers.insert(logOwner, configuration);
     }
     mutex.unlock();
@@ -102,7 +103,7 @@ void QLogger::addLogger(QString logOwner, Configuration* configuration)
 
 void QLogger::addLogger(Configuration* configuration)
 {
-    QString logOwner = configuration != NULL ? configuration->logOwner : "";
+    QString logOwner = configuration != NULL ? configuration->getLogOwner() : QString();
     addLogger(logOwner, configuration);
 }
 
@@ -123,13 +124,14 @@ void QLogger::log(Configuration::Level lvl, QString message, QString functionNam
 {
     writex.lock();
     QList<Configuration*> configs = QLogger::getInstance()->loggers.values(owner);
-    for(int i = 0 ; i < configs.size() ; i++)
+    const int size = configs.size();
+    for(int i = 0 ; i < size ; i++)
     {
        Configuration* cfg = configs.at(i);
-       if(lvl <= cfg->logLevel)
+       if(lvl <= cfg->getLogLevel())
        {
-           cfg->outputLog->write(message, Configuration::levelToString(lvl), owner,
-                                 QDateTime::currentDateTime().toString(cfg->timestampFormat), functionName, lineNumber);
+           cfg->getOutputLog()->write(message, Configuration::levelToString(lvl), owner,
+                                 QDateTime::currentDateTime().toString(cfg->getTimestampFormat()), functionName, lineNumber);
        }
     }
     writex.unlock();

@@ -62,7 +62,7 @@ public:
                   OutputType ouputType = CONSOLE,
                   QString timestampFormat = TIMESTAMP_QLOGGER_FORMAT,
                   QString logTextMask = DEFAULT_TEXT_MASK,
-                  QString fileNameMask = "",
+                  QString fileNameMask = QString(),
                   QString fileNameTimestampFormat = FILE_NAME_TIMESTAMP_FORMAT,
                   QString filePath = QCoreApplication::applicationDirPath(),
                   int fileMaxSizeInKb = 1000);
@@ -74,11 +74,11 @@ public:
     bool operator==(const Configuration &rh);
 
     //! utility to convert the level enum to string
-    static QString levelToString(Configuration::Level level);
+    static QString levelToString(const Configuration::Level level);
 
-    static Configuration::Level levelFromString(QString level);
+    static Configuration::Level levelFromString(const QString level);
 
-public:
+private:
     //! store the name of the log owner to pass it to the output classes
     QString logOwner;
 
@@ -86,7 +86,7 @@ public:
     Level logLevel;
 
     //! output medium to be used to log the message
-    OutputType ouputType;
+    OutputType outputType;
 
     //! this attribute is responsible for writing the log on the output
     Output* outputLog;
@@ -94,6 +94,13 @@ public:
     //! the date time format to be displayed on the log text it must use Qt Date Time format convention
     QString timestampFormat;
 
+public:
+    const QString getLogOwner() const;
+    void setLogOwner(const QString owner);
+    Level getLogLevel() const;
+    Configuration::OutputType getOutputType() const;
+    Output* getOutputLog() const;
+    const QString getTimestampFormat() const;
 
 };
 

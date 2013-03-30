@@ -47,7 +47,7 @@ static const QString LINE_TAG = "<line_number>%1</line_number>";
 static const QString FUNCTION_TAG = "<function>%1</function>";
 static const QString LEVEL_TAG = "<level>%1</level>";
 
-//!
+//! This class output logs in form of XML files using the predefined tags above.
 class XmlOutput : public TextFileOutput
 {
 public:
@@ -57,9 +57,13 @@ public:
     virtual ~XmlOutput();
 
     //! reimplemented to write a xml on the file
-    virtual void write(QString message, QString owner, QString lvl, QString timestamp, QString functionName, int lineNumber);
+    virtual void write(const QString message,
+                       const QString owner,
+                       const QString lvl,
+                       const QString timestamp,
+                       const QString functionName,
+                       const int lineNumber);
 
-    //!
     virtual void close();
 
 protected:

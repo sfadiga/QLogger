@@ -75,7 +75,12 @@ void XmlOutput::createNextFile()
     *qTextStream << ROOT_TAG_OPEN << endl;
 }
 
-void XmlOutput::write(QString message, QString owner, QString lvl, QString timestamp, QString functionName, int lineNumber)
+void XmlOutput::write(const QString message,
+                      const QString owner,
+                      const QString lvl,
+                      const QString timestamp,
+                      const QString functionName,
+                      const int lineNumber)
 {
     if(currentFile->size() > fileMaxSizeInBytes)
     {

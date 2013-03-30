@@ -33,9 +33,14 @@ class Output
 {
 public:
     //! implement this method in order to be called to write the log on the io
-    virtual void write(QString message, QString owner, QString lvl, QString timestamp, QString functionName, int lineNumber) = 0;
+    virtual void write(const QString message,
+                       const QString owner,
+                       const QString lvl,
+                       const QString timestamp,
+                       const QString functionName,
+                       const int lineNumber) = 0;
 
-    //!
+    //! implement if any cleanup will be done after all logs were written
     virtual void close() = 0;
 
     //! virtual destructor to avoid any bad behavior on child classes

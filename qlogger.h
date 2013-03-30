@@ -110,40 +110,40 @@ public:
                           QString timestampFormat = TIMESTAMP_QLOGGER_FORMAT);
 
     //! log a message to a specific level
-    static void log(Configuration::Level, QString message, QString functionName = "", int lineNumber = -1, QString owner = "root");
+    static void log(Configuration::Level, QString message, QString functionName = QString(), int lineNumber = -1, QString owner = "root");
 
     //! logs directly to fatal level
-    inline static void fatal(QString message, QString owner = "root", QString functionName = "", int lineNumber = -1)
+    inline static void fatal(QString message, QString owner = "root", QString functionName = QString(), int lineNumber = -1)
     {
         QLogger::log(Configuration::q0FATAL, message, functionName, lineNumber, owner);
     }
 
     //! logs directly to error level
-    inline static void error(QString message, QString owner = "root", QString functionName = "", int lineNumber = -1)
+    inline static void error(QString message, QString owner = "root", QString functionName = QString(), int lineNumber = -1)
     {
         QLogger::log(Configuration::q1ERROR, message, functionName, lineNumber, owner);
     }
 
     //! logs directly to warn level
-    inline static void warn(QString message, QString owner = "root", QString functionName = "", int lineNumber = -1)
+    inline static void warn(QString message, QString owner = "root", QString functionName = QString(), int lineNumber = -1)
     {
         QLogger::log(Configuration::q2WARN, message, functionName, lineNumber, owner);
     }
 
     //! logs directly to info level
-    inline static void info(QString message, QString owner = "root", QString functionName = "", int lineNumber = -1)
+    inline static void info(QString message, QString owner = "root", QString functionName = QString(), int lineNumber = -1)
     {
         QLogger::log(Configuration::q3INFO, message, functionName, lineNumber, owner);
     }
 
     //! logs directly to debug level
-    inline static void debug(QString message, QString owner = "root", QString functionName = "", int lineNumber = -1)
+    inline static void debug(QString message, QString owner = "root", QString functionName = QString(), int lineNumber = -1)
     {
         QLogger::log(Configuration::q4DEBUG, message, functionName, lineNumber, owner);
     }
 
     //! logs directly to trace level
-    inline static void trace(QString message, QString owner = "root", QString functionName = "", int lineNumber = -1)
+    inline static void trace(QString message, QString owner = "root", QString functionName = QString(), int lineNumber = -1)
     {
         QLogger::log(Configuration::q5TRACE, message, functionName, lineNumber, owner);
     }
