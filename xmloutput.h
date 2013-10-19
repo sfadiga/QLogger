@@ -26,7 +26,7 @@
 #include "textoutput.h"
 
 #include <QXmlStreamWriter>
-#include <QPointer>
+#include <QDir>
 
 
 namespace qlogger
@@ -53,7 +53,7 @@ class XmlOutput : public TextFileOutput
 public:
     XmlOutput(QString logOwner,  QString fileNameMask = XML_FILE_NAME_MASK,
               QString fileNameTimestampFormat = FILE_NAME_TIMESTAMP_FORMAT,
-              QString filePath = QCoreApplication::applicationDirPath(), int fileMaxSizeInKb = 100);
+              QString filePath = QDir::currentPath(), int fileMaxSizeInKb = 100);
     virtual ~XmlOutput();
 
     //! reimplemented to write a xml on the file

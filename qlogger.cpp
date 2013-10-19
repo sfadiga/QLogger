@@ -44,8 +44,8 @@ QLoggerDestroyer::~QLoggerDestroyer()
 {
     QLogger::mutex.lock();
 	// call the close file methods for all loggers
-    singleton.loadAcquire()->close();
-    delete singleton.loadAcquire();
+	QLoggerDestroyer::getPointerInstance()->close();
+    delete QLoggerDestroyer::getPointerInstance();
     QLogger::mutex.unlock();
 }
 
@@ -73,30 +73,37 @@ void QLogger::close()
 
 QLogger* QLogger::getInstance()
 {
-    if(!instance.load())
+	if(!QLogger::getPointerInstance())
     {
         mutex.lock();
         if (instance.testAndSetOrdered(0, new QLogger()))
         {
             destroyer.SetSingleton(instance);
-            //add the default "root" logger
-            QLogger::instance.load()->loggers.insert("root", new Configuration("root", Configuration::q1ERROR));
-            // configuration file read, then start with the default logger
-            ConfigFileHandler::parseConfigurationFile(QLogger::instance.load()->loggers);
+			QList<Configuration*> lst;
+			//add the default "root" logger
+			lst.append(new Configuration("root", Configuration::q1ERROR));
+			// configuration file read, then start with the default logger
+			ConfigFileHandler::parseConfigurationFile(lst);//QLogger::getPointerInstance()->loggers);
+			int size =  lst.size();
+			for(int i = 0 ; i < size ; i++)
+			{
+				Configuration* config = lst.at(i);
+				QLogger::getPointerInstance()->loggers.insert(config->getLogOwner(), config);
+			}
         }
         mutex.unlock();
     }
-    return instance.loadAcquire();
+	return QLogger::getPointerInstance();
 }
 
 void QLogger::addLogger(QString logOwner, Configuration* configuration)
 {
     QLogger::getInstance();
     mutex.lock();
-    if(!QLogger::instance.load()->loggers.values(logOwner).contains(configuration))
+    if(!QLogger::getPointerInstance()->loggers.values(logOwner).contains(configuration))
     {
         configuration->setLogOwner(logOwner);
-        QLogger::instance.load()->loggers.insert(logOwner, configuration);
+        QLogger::getPointerInstance()->loggers.insert(logOwner, configuration);
     }
     mutex.unlock();
 }

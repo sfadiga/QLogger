@@ -39,8 +39,7 @@ XmlOutput::XmlOutput(QString logOwner,
     if(fileNameMask.isEmpty() || !(fileNameMask.contains("%1") && fileNameMask.contains("%2") && fileNameMask.contains("%3")))
         fileNameMask = XML_FILE_NAME_MASK;
 
-	QDir::setCurrent(filePath);
-    createNextFile();
+	createNextFile();
 }
 
 XmlOutput::~XmlOutput()

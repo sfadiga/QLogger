@@ -24,7 +24,6 @@
 #define CONFIGURATION_H
 
 #include <QString>
-#include <QCoreApplication>
 #include <QWeakPointer>
 #include "textoutput.h"
 #include "xmloutput.h"
@@ -64,7 +63,7 @@ public:
                   QString logTextMask = DEFAULT_TEXT_MASK,
                   QString fileNameMask = QString(),
                   QString fileNameTimestampFormat = FILE_NAME_TIMESTAMP_FORMAT,
-                  QString filePath = QCoreApplication::applicationDirPath(),
+                  QString filePath = QDir::currentPath(),
                   int fileMaxSizeInKb = 1000);
 
     //! destructor, check for outputLog and closes it

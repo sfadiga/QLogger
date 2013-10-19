@@ -24,7 +24,6 @@
 
 #include <QDateTime>
 #include <QFile>
-#include <QCoreApplication>
 #include <QDir>
 #include <iostream>
 #include <QTextCodec>
@@ -105,7 +104,7 @@ TextFileOutput::TextFileOutput(QString logOwner, QString logFormatMask, QString 
     // check if a valid path was informed
     QDir test(filePath);
     if(filePath.isEmpty() || !test.exists())
-        filePath = QCoreApplication::applicationDirPath();
+		filePath = QDir::currentPath();
     else
         filePath = path;
 
@@ -117,7 +116,6 @@ TextFileOutput::TextFileOutput(QString logOwner, QString logFormatMask, QString 
     else
         fileNameMask = fileMask;
 
-	QDir::setCurrent(filePath);
     createNextFile();
 }
 
@@ -131,7 +129,7 @@ TextFileOutput::~TextFileOutput()
 
 void TextFileOutput::createNextFile()
 {
-    if(qTextStream && currentFile)
+	if(qTextStream && currentFile)
     {
         qTextStream->flush();
         delete qTextStream;
@@ -139,18 +137,23 @@ void TextFileOutput::createNextFile()
         currentFile->close();
     }
     // TEXT FILE MODE
-    currentFile = new QFile(getFileName());
+	QDir dir(filePath);
+	QString myFile = dir.absoluteFilePath(getFileName());
+	currentFile = new QFile(myFile);
 
     if(currentFile->open(QIODevice::WriteOnly | QIODevice::Text))
-        qTextStream = new QTextStream(currentFile);
+	{
+		qTextStream = new QTextStream(currentFile);
+	}	
     else // Fall back to console mode
+	{
         qTextStream = new QTextStream(stdout);
+	}
 
     // enables the output to text mode and have correct line breaks
     qTextStream->device()->setTextModeEnabled(true);
     qTextStream->setCodec(QTextCodec::codecForName("UTF-8"));
 }
-
 
 QString TextFileOutput::getFileName() const
 {

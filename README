@@ -1,6 +1,6 @@
-QLogger - A tiny Qt logging framework.
+QLogger - A tiny Qt log framework.
 
-The purpose of this logging framework is to be easy to configure and use on 
+The purpose of this log framework is to be easy to configure and use on 
 a Qt project.
 QLogger rely only on Qt framework, so it does not have any other 
 external dependencies.
@@ -20,7 +20,7 @@ The code is licensed under MIT License.
 using namespace qlogger;
 int main(int argc, char *argv[])
 {
-    QLOG_FATAL("this is quick logged using the default root logger");
+    QLOG_FATAL("this is quick log using the default root logger");
 	//or for the ones who does not like macros
 	QLogger::fatal("this is quick logged using the default root logger");
 ...

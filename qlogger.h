@@ -46,6 +46,17 @@ public:
 private:
     QAtomicPointer<QLogger> singleton;
 
+public:
+	//! Handles the acess to QAtomicPointer methods based on Qt version
+	inline QLogger* getPointerInstance()
+	{
+		#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+			return singleton;
+		#else	
+            return singleton.loadAcquire();
+		#endif
+	}
+
 };
 
 //! Main QLogger class, its a singleton responsible for register the log messages to
@@ -82,15 +93,23 @@ private:
     //! this static instance is responsible for call the singleton destructor when program ends
     static QLoggerDestroyer destroyer;
 
-    //! This constructor is the one used for initial set of the level,
-    //! one call only after the program starts there is no way to change the log level
-    //QLogger(Configuration);
+	//! this methods adds a loger based on a configuration 
+	static void addLogger(QString logOwner, Configuration* configuration);
 
-    //! Stop the compiler generating methods of copy the object
+private:
+	//! Stop the compiler generating methods of copy the object
     QLogger(QLogger const& copy);            // Not Implemented
     QLogger& operator=(QLogger const& copy); // Not Implemented
 
-    static void addLogger(QString logOwner, Configuration* configuration);
+	//! Handles the acess to QAtomicPointer methods based on Qt version
+	static inline QLogger* getPointerInstance()
+	{
+		#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+			return instance;
+		#else	
+            return instance.loadAcquire();
+		#endif
+	}
 
 
 private:
@@ -150,7 +169,7 @@ public:
 
 };
 
-
+// MACROS FOR THE PEOPLE!
 #define QLOG_FATAL(message, ...) QLogger::log(Configuration::q0FATAL, message, __FUNCTION__ , __LINE__, ##__VA_ARGS__);
 #define QLOG_ERROR(message, ...) QLogger::log(Configuration::q1ERROR, message, __FUNCTION__ , __LINE__ , ##__VA_ARGS__);
 #define QLOG_WARN(message, ...) QLogger::log(Configuration::q2WARN, message, __FUNCTION__ , __LINE__ , ##__VA_ARGS__);

@@ -49,23 +49,23 @@ namespace qlogger
 //! owner.fileName = { file name mask, must contain all %1 %2 %3 params, example: log_%1_%2_%3.txt
 //! owner.fileNameTimeStamp = { the timestamp that will be written in param %3 of the file name mask, must follow QTimeDate string format.
 
-static const QString LEVEL = "level";
+static const QString CH_LEVEL = "level";
 
-static const QString OUTPUT_TYPE = "outputType";
+static const QString CH_OUTPUT_TYPE = "outputType";
 
-static const QString LOG_MASK = "logMask";
+static const QString CH_LOG_MASK = "logMask";
 
-static const QString MAX_FILE_SIZE = "maxFileSize";
+static const QString CH_MAX_FILE_SIZE = "maxFileSize";
 
-static const QString PATH = "path";
+static const QString CH_PATH = "path";
 
-static const QString TIMESTAMP_FORMAT = "timestampFormat";
+static const QString CH_TIMESTAMP_FORMAT = "timestampFormat";
 
-static const QString FILE_NAME = "fileName";
+static const QString CH_FILE_NAME = "fileName";
 
-static const QString FILE_NAME_TIMESTAMP = "fileNameTimeStamp";
+static const QString CH_FILE_NAME_TIMESTAMP = "fileNameTimeStamp";
 
-static const QString CONFIG_FILE_NAME = "qlogger.cfg";
+static const QString CH_CONFIG_FILE_NAME = "qlogger.cfg";
 
 class ConfigFileHandler
 {
@@ -74,17 +74,17 @@ private:
 
     inline static void recursiveFolderSearch(QDir& dir, bool &found)
     {
-        QDir::setCurrent(dir.absolutePath());
+        QDir path(dir.absolutePath());
         QStringList list = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
         const int size = list.size();
         for(int i = 0; i < size ; ++i)
         {
-            QString path = list.at(i);
+            QString currentPath = list.at(i);
             if(found)
             {
                 return;
             }
-            else if(QFile::exists(CONFIG_FILE_NAME))
+            else if(QFile::exists(CH_CONFIG_FILE_NAME))
             {
                 found = true;
                 return;
@@ -92,7 +92,7 @@ private:
             else
             {
                 found = false;
-                dir.cd(path);
+                dir.cd(currentPath);
                 recursiveFolderSearch(dir, found);
                 if(!found)
                     dir.cdUp();
@@ -104,7 +104,7 @@ protected:
 
     inline static bool searchForConfigFile()
     {
-        QDir dir(QCoreApplication::applicationDirPath());
+		QDir dir(QDir::currentPath());
         //search on the folder tree
         bool found = false;
         recursiveFolderSearch(dir, found);
@@ -112,24 +112,25 @@ protected:
     }
 
     inline static bool createConfiguration(QMultiHash<QString, QString> &ownerConfigLines,
-                                           QMultiHash<QString, Configuration*> &loggers)
+                                           QList<Configuration*> &configs)//QMultiHash<QString, Configuration*> &loggers)
     {
-        QList<QString> configs = ownerConfigLines.keys();
+        QList<QString> configTextList = ownerConfigLines.keys();
         QString currentConfig = QString();
         bool localTest = false; // the loggers reference could already been filled from somewhere else
-        const int size = configs.size();
+        const int size = configTextList.size();
         for(int i = 0 ; i < size ; i++)
         {
-            QString config = configs.at(i);
-            if(currentConfig != config)
+            QString configText = configTextList.at(i);
+            if(currentConfig != configText)
             {
-                QStringList values = ownerConfigLines.values(config);
-                loggers.insert(config, parseAllLinesOfConfig(config, values));
-                currentConfig = config;
+                QStringList values = ownerConfigLines.values(configText);
+                //loggers.insert(config, parseAllLinesOfConfig(config, values));
+				configs.append(parseAllLinesOfConfig(configText, values));
+                currentConfig = configText;
                 localTest = true;
             }
         }
-        return localTest;
+	    return localTest;
     }
 
     inline static Configuration* parseAllLinesOfConfig(QString owner, QStringList lines)
@@ -143,16 +144,18 @@ protected:
         QString timestampFormat = QString();
         QString fileName = QString();
         QString fileNameTimestamp = QString();
-        foreach(QString line , lines)
+		int size = lines.size();
+		for (int i = 0 ; i < size ; i++)//(QString line , lines)
         {
+			QString line = lines.at(i);
             QStringList configList = line.trimmed().split("=");
             QString key = configList.isEmpty() ? QString() : configList.at(0); // left hand
             QString paramValue = configList.size() < 1 ? QString() : configList.at(1); //right hand
-            if(key == LEVEL)
+          	 if(key == CH_LEVEL)
             {
                 level = Configuration::levelFromString(paramValue);
             }
-            else if(key == OUTPUT_TYPE)
+            else if(key == CH_OUTPUT_TYPE)
             {
                 if(paramValue.toUpper().contains("TEXT"))
                 {
@@ -167,34 +170,35 @@ protected:
                     outputType = Configuration::CONSOLE;
                 }
             }
-            else if(key == LOG_MASK)
+            else if(key == CH_LOG_MASK)
             {
                 logMask = paramValue;
             }
-            else if(key == MAX_FILE_SIZE)
+			else if(key == CH_MAX_FILE_SIZE)
             {
                 bool ok;
                 maxFileSize = paramValue.toInt(&ok);
                 if(!ok)
                     maxFileSize = 1000;
             }
-            else if(key == PATH)
-            {
-                path = paramValue;
-            }
-            else if(key == TIMESTAMP_FORMAT)
+			else if(key == CH_TIMESTAMP_FORMAT)
             {
                 timestampFormat = paramValue;
             }
-            else if(key == FILE_NAME)
+            else if(key == CH_FILE_NAME)
             {
                 fileName = paramValue;
             }
-            else if(key == FILE_NAME_TIMESTAMP)
+            else if(key == CH_FILE_NAME_TIMESTAMP)
             {
                 fileNameTimestamp = paramValue;
+            }	
+            else if(key == CH_PATH)
+            {
+                path = paramValue;
             }
         }
+
         return new Configuration(owner, level, outputType, timestampFormat, logMask, fileName, fileNameTimestamp, path, maxFileSize);
     }
 
@@ -202,10 +206,10 @@ public:
 
     //! only public method, this will receive a hash by reference and fill it with found configurations
     //! false will be returned if no config is filled in
-    inline static bool parseConfigurationFile(QMultiHash<QString, Configuration*> &loggers)
+    inline static bool parseConfigurationFile(QList<Configuration*> &configs)//(QMultiHash<QString, Configuration*> &loggers)
     {
         QMultiHash<QString, QString> ownerConfigLines;
-        QFile* file = new QFile(CONFIG_FILE_NAME);
+        QFile* file = new QFile(CH_CONFIG_FILE_NAME);
         if (ConfigFileHandler::searchForConfigFile() &&
                 file->open(QIODevice::ReadOnly | QIODevice::Text))
         {
@@ -224,7 +228,8 @@ public:
                     }
                 }
             } while (!configLine.isNull());
-            return createConfiguration(ownerConfigLines, loggers);
+			file->close();
+            return createConfiguration(ownerConfigLines, configs);
         }
         else
         {
