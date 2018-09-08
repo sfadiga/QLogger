@@ -87,6 +87,11 @@ QLogger *QLogger::getInstance()
             for (int i = 0 ; i < size ; i++) {
                 Configuration *config = lst.at(i);
                 QLogger::getPointerInstance()->loggers.insert(config->getLogOwner(), config);
+
+                if (config->getOutputType() == Configuration::SIGNAL) {
+                    connect(config, &Configuration::logMessage,
+                            QLogger::getPointerInstance(), &QLogger::logMessage);
+                }
             }
         }
 

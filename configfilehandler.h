@@ -78,7 +78,7 @@ class ConfigFileHandler {
 private:
     inline static void recursiveFolderSearch(QDir &dir, bool &found) {
         QDir path(dir.absolutePath());
-        QStringList list = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        QStringList list = dir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
         const int size = list.size();
 
         for (int i = 0; i < size; ++i) {
