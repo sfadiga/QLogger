@@ -83,15 +83,12 @@ private:
 
         for (int i = 0; i < size; ++i) {
             QString currentPath = list.at(i);
+            QFileInfo info = QFileInfo(currentPath);
 
             if (found) {
                 return;
 
-            } else if (QFile::exists(CH_CONFIG_FILE_NAME)) {
-                found = true;
-                return;
-
-            } else {
+            } else if (info.isDir()) {
                 found = false;
                 dir.cd(currentPath);
                 recursiveFolderSearch(dir, found);
@@ -99,7 +96,15 @@ private:
                 if (!found) {
                     dir.cdUp();
                 }
+
+            } else {
+                if (QFile::exists(CH_CONFIG_FILE_NAME)) {
+                    found = true;
+                    return;
+                }
+
             }
+
         }
     }
 

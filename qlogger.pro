@@ -9,7 +9,7 @@ QT       -= gui
 
 TEMPLATE = lib
 CONFIG   -= app_bundle
-CONFIG += shared_and_static build_all
+CONFIG += shared_and_static -debug-and-release build_all
 
 DEFINES += QLOGGER_LIBRARY
 
