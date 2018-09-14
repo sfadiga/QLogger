@@ -4,12 +4,11 @@
 #
 #-------------------------------------------------
 
-QT       += core
-QT       -= gui
+QT       += core gui
 
-TEMPLATE = lib
-CONFIG   -= app_bundle
-CONFIG += shared_and_static -debug-and-release build_all
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TEMPLATE = app
 
 DEFINES += QLOGGER_LIBRARY
 
@@ -47,7 +46,9 @@ SOURCES += \
     qlogger.cpp \
     configuration.cpp \
     textoutput.cpp \
-    xmloutput.cpp
+    xmloutput.cpp \
+    main.cpp \
+    mainwindow.cpp
 
 HEADERS += \
     configfilehandler.h \
@@ -55,7 +56,8 @@ HEADERS += \
     output.h \
     qlogger.h \
     textoutput.h \
-    xmloutput.h
+    xmloutput.h \
+    mainwindow.h
 
 unix {
     target.path = /usr/lib
@@ -65,3 +67,6 @@ unix {
 DISTFILES += \
     qlogger.cfg \
     README
+
+FORMS += \
+    mainwindow.ui
