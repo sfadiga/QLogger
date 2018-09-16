@@ -105,6 +105,7 @@ public:
     const QString getLogOwner() const;
     void setLogOwner(const QString owner);
     Level getLogLevel() const;
+    void setLogLevel(const Level);
     Configuration::OutputType getOutputType() const;
     Output *getOutputLog() const;
     const QString getTimestampFormat() const;

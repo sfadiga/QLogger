@@ -156,6 +156,23 @@ void QLogger::log(Configuration::Level lvl, QString message, QString functionNam
     writex.unlock();
 }
 
+void QLogger::changelogLevel(QString owner, Configuration::Level lvl, Configuration::OutputType outputType)
+{
+    writex.lock();
+    QList<Configuration *> configs = QLogger::getInstance()->loggers.values(owner);
+    const int size = configs.size();
+
+    for (int i = 0 ; i < size ; i++) {
+        Configuration *cfg = configs.at(i);
+
+        if (cfg->getOutputType() == outputType) {
+            cfg->setLogLevel(lvl);
+        }
+    }
+
+    writex.unlock();
+}
+
 
 
 }

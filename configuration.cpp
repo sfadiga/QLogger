@@ -133,6 +133,11 @@ Configuration::Level Configuration::getLogLevel() const
     return logLevel;
 }
 
+void Configuration::setLogLevel(const Level lvl)
+{
+    logLevel = lvl;
+}
+
 Configuration::OutputType Configuration::getOutputType() const
 {
     return outputType;

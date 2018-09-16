@@ -136,6 +136,9 @@ public:
                     QString functionName = QString(), int lineNumber = -1,
                     QString owner = "root");
 
+    //! change the level of a particular owner/output type.
+    static void changelogLevel(QString, Configuration::Level, Configuration::OutputType);
+
     //! logs directly to fatal level
     inline static void fatal(QString message, QString owner = "root",
                              QString functionName = QString(),
