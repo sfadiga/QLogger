@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QRadioButton>
+#include <QLabel>
 
 #include "configuration.h"
 
@@ -21,14 +22,18 @@ protected:
     enum Level {
         FATAL, ERROR, WARN, INFO, DEBUG, TRACE,
     };
+    QLabel *p_display_status_lbl, *p_logging_status_lbl;
+    QRadioButton *p_current_btn;
+    Level m_level = DEBUG, m_log_level = DEBUG;
+
+    void setDisplayLogLevel(Level);
+    void setLoggingLogLevel(Level);
     void levelBtnsClicked();
     void sendBtnClicked();
     void sendMessage(QString msg);
 
 private:
     Ui::MainWindow *ui;
-    QRadioButton *p_current_btn;
-    Level m_level = DEBUG;
 };
 
 #endif // MAINWINDOW_H

@@ -27,9 +27,10 @@
 #include <QCoreApplication>
 #include <QApplication>
 
-#include <string>
+#include <string.h>
 
 #include "qlogger.h"
+#include "mainwindow.h"
 
 #include <QTime>
 #include <QRunnable>
@@ -154,23 +155,32 @@ void quickLogger()
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    if (strncmp(argv[1], "SIGNAL", 6) == 0) {
+        QApplication a(argc, argv);
+        MainWindow w;
+        w.show();
 
-    //heavyLoadToFileTest();
+        return a.exec();
 
-    //threadHeavyLoadTest();
+    } else {
+        QCoreApplication a(argc, argv);
 
-    //sameLoggerMultiLevels();
+        //heavyLoadToFileTest();
 
-    //changeAllConfiguration();
+        //threadHeavyLoadTest();
 
-    //configFromFileTest();
+        //sameLoggerMultiLevels();
 
-    //overrideRootLoggerBehaviour();
+        //changeAllConfiguration();
 
-    quickLogger();
+        //configFromFileTest();
 
-    return a.exec();
+        //overrideRootLoggerBehaviour();
+
+        quickLogger();
+
+        return a.exec();
+    }
 }
 
 

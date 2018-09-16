@@ -15,17 +15,10 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="1">
-     <widget class="QPushButton" name="pSendBtn">
-      <property name="text">
-       <string>Send</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1" rowspan="2">
+    <item row="1" column="0">
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
-       <string>Level to display :</string>
+       <string>Display Level :</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
@@ -52,7 +45,7 @@
        <item>
         <widget class="QRadioButton" name="pInfoBtn">
          <property name="text">
-          <string>Info</string>
+          <string>I&amp;nfo</string>
          </property>
         </widget>
        </item>
@@ -76,10 +69,68 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="0" rowspan="3">
-     <widget class="QPlainTextEdit" name="pFatalErrors">
+    <item row="1" column="1">
+     <widget class="QPlainTextEdit" name="pErrorsDisplay">
       <property name="plainText">
        <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="title">
+       <string>Log Level :</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QRadioButton" name="pLogFatalBtn">
+         <property name="text">
+          <string>Fatal</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="pLogErrorBtn">
+         <property name="text">
+          <string>Error</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="pLogWarnBtn">
+         <property name="text">
+          <string>Warn</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="pLogInfoBtn">
+         <property name="text">
+          <string>Info</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="pLogDebugBtn">
+         <property name="text">
+          <string>Debug</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="pLogTraceBtn">
+         <property name="text">
+          <string>Trace</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="3">
+     <widget class="QPushButton" name="pSendBtn">
+      <property name="text">
+       <string>Send</string>
       </property>
      </widget>
     </item>
@@ -103,7 +154,7 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QStatusBar" name="pStatusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
