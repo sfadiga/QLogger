@@ -19,16 +19,14 @@ public:
     ~MainWindow();
 
 protected:
-    enum Level {
-        FATAL, ERROR, WARN, INFO, DEBUG, TRACE,
-    };
-    QLabel *p_display_status_lbl, *p_logging_status_lbl;
-    QRadioButton *p_current_btn;
-    Level m_level = DEBUG, m_log_level = DEBUG;
+    QLabel *p_msg_status_lbl, *p_logging_status_lbl;
+    QRadioButton *p_current_msg_btn, *p_current_logging_btn;
+    qlogger::Configuration::Level m_log_level = qlogger::Configuration::q4DEBUG, m_msg_level = qlogger::Configuration::q4DEBUG;
 
-    void setDisplayLogLevel(Level);
-    void setLoggingLogLevel(Level);
-    void levelBtnsClicked();
+    void setMessageLogLevel(qlogger::Configuration::Level);
+    void setLoggingLogLevel(qlogger::Configuration::Level);
+    void msgLevelBtnsClicked();
+    void loggingLevelBtnsClicked();
     void sendBtnClicked();
     void sendMessage(QString msg);
 
