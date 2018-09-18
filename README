@@ -117,8 +117,26 @@ file.path=c:\
 cons.level=trace
 cons.outputType=console
 cons.logMask=time:%t owner:%o level:%l function:%f line:%n message:%m
--------------------------------------------------------------------------------
 
+# third level will log to a QT signal called logMessage(QString)
+sigs.level=trace
+sigs.outputType=SIGNAL
+
+-------------------------------------------------------------------------------
+	// Assuming a QPlainTexrEdit has called plainTextEdit been created in the 
+	// Qt Ui form, a connection needs to be made..
+    QObject::connect(QLogger::getInstance(), &QLogger::logMessage,
+                     ui->plainTextEdit, &QPlainTextEdit::appendPlainText);
+
+	// then the log messages should be made as normal.
+    QLOG_ERROR("error message", "sigs");
+    QLOG_WARN("warn message", "sigs");
+    QLOG_DEBUG("debug message", "sigs");
+    QLOG_INFO("info message", "sigs");
+    QLOG_TRACE("trace message", "sigs");
+    
+-------------------------------------------------------------------------------
+    
 This small readme covered almost everything QLogger is capable to do, there are some
 other configurations and details, but they are pretty straight forward to understand
 by reading the code.
