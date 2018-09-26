@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 ...
 -------------------------------------------------------------------------------
 This example shows a logger that was added from a configuration file. In order 
-to use a configuration file, one can simply add a qlogger.cfg (plain text) file
+to use a configuration file, one can simply add a qlogger.ini (ini file format) file
 onto application path. QLogger will parse the file when the first instance of 
 logger is called. Note that this also allows adding logs programatically so
 they both can be used together.
@@ -106,17 +106,28 @@ Example of a configuration file for QLogger:
 -------------------------------------------------------------------------------
 # line comment 
 
-# first configuration will log to warn level to a file on c:\ with 1Mb of size 
-file.level=warn
-file.outputType=text
+# first configuration will log to warn level to a file on c:\ with 10Mb of size 
+
+[file]
+level=warn
+outputType=text
+
 # 10mb file
-file.maxFileSize=1000
-file.path=c:\
+maxFileSize=10000
+path=c:/temp/
 
 # second config will log to console with trace level and customized log text mask 
-cons.level=trace
-cons.outputType=console
-cons.logMask=time:%t owner:%o level:%l function:%f line:%n message:%m
+[cons]
+level=trace
+outputType=console
+logMask=time:%t owner:%o level:%l function:%f line:%n message:%m
+
+# third a xml output 
+[xml]
+level=trace
+outputType=xml
+fileName=XML_log_%1_%2_%3.xml
+path=c:/temp/
 -------------------------------------------------------------------------------
 
 This small readme covered almost everything QLogger is capable to do, there are some

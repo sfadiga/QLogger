@@ -84,16 +84,16 @@ void heavyLoadToFileTest()
 
 void configFromFileTest()
 {
-    QLOG_ERROR("this log will test config files, and save a file to more than one log file with 10mb");
-    QLOG_ERROR("the config file must be on application path, can be on any folder together with or below the executable");
-    QLOG_ERROR("this will take a while");
+    QLOG_ERROR("this log will test config files, and save a file to more than one log file with 10mb", "cons");
+    QLOG_ERROR("the config file must be on application path, can be on any folder together with or below the executable", "cons");
+    QLOG_ERROR("this will take a while", "cons");
 
-    const int count = 500000;
+    const int count = 5000;
     for (int i = 0; i != count; ++i)
     {
-        QLOG_WARN("loaded a log from config and save to a file !!!!", "file");
-        QLOG_ERROR("fatal log from config", "file");
-        QLOG_FATAL("loaded a log config from a file", "file");
+        QLOG_WARN(QString("a warn log from config and save to a file n:%1 !").arg(i), "file");
+        QLOG_ERROR(QString("an error log from config and save to a file n:%1 !").arg(i), "file");
+        QLOG_FATAL(QString("a fatal a log from config and save to a file n:%1 !").arg(i), "file");
     }
     for (int i = 0; i != 10; ++i)
     {
@@ -119,10 +119,10 @@ void sameLoggerMultiLevels()
 
 void changeAllConfiguration()
 {
-    Configuration* cfg =
-        new Configuration("config", Configuration::q3INFO, Configuration::TEXTFILE,
-                          "dd-MM-yyyy hh:mm:ss", "%t [%l] <%o> : %m",
-                          "myfile_%3_%2_%1.log", "ddMMyyyy_hhmmss", "c:\\", 10000);
+    shared_ptr<Configuration> cfg =
+            shared_ptr<Configuration>(new Configuration("config", Configuration::q3INFO, Configuration::TEXTFILE,
+                              "dd-MM-yyyy hh:mm:ss", "%t [%l] <%o> : %m",
+                              "myfile_%3_%2_%1.log", "ddMMyyyy_hhmmss", "c:\\", 10000));
     QLogger::addLogger(cfg);
     const int count = 100;
     for (int i = 0; i != count; ++i)
@@ -160,11 +160,11 @@ int main(int argc, char *argv[])
 
     //changeAllConfiguration();
 
-    //configFromFileTest();
+    configFromFileTest();
 
     //overrideRootLoggerBehaviour();
 
-    quickLogger();
+    //quickLogger();
 
     return a.exec();
 }

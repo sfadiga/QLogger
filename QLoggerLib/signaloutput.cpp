@@ -19,34 +19,35 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+#include "signaloutput.h"
 
-#ifndef OUTPUT_H
-#define OUTPUT_H
-
-#include <QString>
+#include <QDateTime>
 
 namespace qlogger
 {
 
-//! Abstract interface class used to define the behaviour of the classes that will log the messages on all types io.
-class Output
+
+SignalOutput::SignalOutput(Configuration *cfg) : Output(cfg)
 {
-public:
-    //! implement this method in order to be called to write the log on the io
-    virtual void write(const QString message,
-                       const QString owner,
-                       const QString lvl,
-                       const QString timestamp,
-                       const QString functionName,
-                       const int lineNumber) = 0;
+}
 
-    //! implement if any cleanup will be done after all logs were written
-    virtual void close() = 0;
+void SignalOutput::write(const QString message, const QString owner, const Level lvl,
+                         const QDateTime timestamp, const QString functionName,
+                         const int lineNumber)
+{
 
-    //! virtual destructor to avoid any bad behavior on child classes
-    inline virtual ~Output() {}
-};
+    QString logtext = formatLogText(configuration->getLogTextMask(),
+                                    message, owner, levelToString(lvl),
+                                    timestamp.toString(configuration->getTimestampFormat()),
+                                    functionName, lineNumber);
+    emit qlogger(logtext);
 
 }
 
-#endif // OUTPUT_H
+void SignalOutput::close()
+{
+}
+
+
+
+}

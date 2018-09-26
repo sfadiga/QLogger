@@ -19,7 +19,6 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-
 #ifndef XMLOUTPUT_H
 #define XMLOUTPUT_H
 
@@ -28,48 +27,42 @@
 #include <QXmlStreamWriter>
 #include <QDir>
 
-
 namespace qlogger
 {
 
-//! log_appname_logname_datetime.txt %1 = application name , %2 = owner , %3 = timestamp
-static const QString XML_FILE_NAME_MASK = "log_%1_%2_%3.xml";
-
-static const QString XML_TAG = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-static const QString ROOT_TAG_OPEN = "<logs>";
-static const QString ROOT_TAG_CLOSE = "</logs>";
-static const QString LOG_TAG_OPEN = "<log>";
-static const QString LOG_TAG_CLOSE = "</log>";
-static const QString DATE_TIME_TAG = "<date_time>%1</date_time>";
-static const QString OWNER_TAG = "<owner>%1</owner>";
-static const QString MESSAGE_TAG = "<message>%1</message>";
-static const QString LINE_TAG = "<line_number>%1</line_number>";
-static const QString FUNCTION_TAG = "<function>%1</function>";
-static const QString LEVEL_TAG = "<level>%1</level>";
-
-//! This class output logs in form of XML files using the predefined tags above.
-class XmlOutput : public TextFileOutput
+//!
+//! \brief The XmlOutput class - This class output logs in form of XML files using the predefined tags above.
+//!
+class XmlOutput : public PlainTextOutput
 {
 public:
-    XmlOutput(QString logOwner,  QString fileNameMask = XML_FILE_NAME_MASK,
-              QString fileNameTimestampFormat = FILE_NAME_TIMESTAMP_FORMAT,
-              QString filePath = QDir::currentPath(), int fileMaxSizeInKb = 100);
+    //!
+    //! \brief XmlOutput - default constructor
+    //! \param conf
+    //!
+    XmlOutput(Configuration *conf);
+    XmlOutput() = delete;
+    //! closes any resource used by the file i/o
     virtual ~XmlOutput();
 
-    //! reimplemented to write a xml on the file
+
+
+    //!
+    //! \brief write -  reimplemented to write a xml on the file
+    //! \param message
+    //! \param owner
+    //! \param lvl
+    //! \param timestamp
+    //! \param functionName
+    //! \param lineNumber
+    //!
     virtual void write(const QString message,
                        const QString owner,
-                       const QString lvl,
-                       const QString timestamp,
+                       const Level lvl,
+                       const QDateTime timestamp,
                        const QString functionName,
                        const int lineNumber);
 
-    virtual void close();
-
-protected:
-    //! this method is called when a new file needs to be created due to size limitation
-    virtual void createNextFile();
-	
 };
 
 }
