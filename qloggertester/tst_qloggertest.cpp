@@ -35,6 +35,24 @@ using namespace qlogger;
 
 #include <QtCore>
 
+
+class LoggerA : public QRunnable
+{
+    void run()
+    {
+        for(int i = 0 ; i < 1000000 ; i++)
+            QLOG_ERROR("Logger A speaking !", "threads");
+    }
+};
+class LoggerB : public QRunnable
+{
+    void run()
+    {
+        for(int i = 0 ; i < 1000000 ; i++)
+            QLOG_FATAL("Logger B speaking !", "threads");
+    }
+};
+
 //!
 //! \brief The QLoggerTest class - this is a broad test class for the qlogger project
 //! it do some unit testing and also application testing
@@ -71,6 +89,7 @@ private slots:
     void test_caseXmlOutputFromIni();
     void test_caseLogSignals();
     void test_caseJSONOutput();
+    void test_caseThreadHeavyLoadTest();
 };
 
 void QLoggerTest::signalSlotPrinter(QString msg)
@@ -180,8 +199,6 @@ void QLoggerTest::test_caseConsoleFormatString()
     co->write("test case on console", "owner", q2WARN, QDateTime::currentDateTime(), "test_caseConsoleFormatString", 123);
 
     QSharedPointer<Configuration> cfg = co->getConfiguration();
-
-    //QString msg = co->formatLogText("", "", "", "", "", "", 1);
 
     QVERIFY2(cfg.get() == cf, "test same reference");
 }
@@ -330,17 +347,10 @@ void QLoggerTest::test_caseLogSignals()
 
 void QLoggerTest::test_caseJSONOutput()
 {
-    QLogger::addLogger("json", q5TRACE, JSON);
+    QLogger::addLogger("json", q5TRACE, JSON, DEFAULT_TEXT_MASK,
+                       DEFAULT_TIMESTAMP_FORMAT, JSON_FILE_NAME_MASK,
+                       FILE_NAME_TIMESTAMP_FORMAT, "c:\\temp", DEFAULT_FILE_SIZE_MB);
     const int count = 100000;
-/*    QLOG_FATAL(QString("start:%1").arg(QTime::currentTime().toString("mmss")));
-    const int count = 100000;
-    for (int i = 0; i != count; ++i)
-    {
-     if(i % 10000 == 0)
-         QLOG_WARN("this will not be logged on the file", "json");
-    }
-    QLOG_FATAL(QString("end:%1").arg(QTime::currentTime().toString("mmss")));
-*/
     QLOG_FATAL(QString("start:%1").arg(QTime::currentTime().toString("mmss")));
 
     for (int i = 0; i != count; ++i)
@@ -355,6 +365,17 @@ void QLoggerTest::test_caseJSONOutput()
     QLOG_INFO("fim test_caseJSONOutput");
 }
 
+void QLoggerTest::test_caseThreadHeavyLoadTest()
+{
+    /*
+    //little long to run, uncomment to test
+    QLogger::addLogger("threads");
+    LoggerA* loga = new LoggerA;
+    LoggerB* logb = new LoggerB;
+    QThreadPool::globalInstance()->start(loga);
+    QThreadPool::globalInstance()->start(logb);
+    //*/
+}
 
 QTEST_MAIN(QLoggerTest)
 

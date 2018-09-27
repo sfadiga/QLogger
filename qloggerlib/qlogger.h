@@ -24,9 +24,7 @@
 
 #include <QMutex>
 #include <QSharedPointer>
-#include <QSet>
 #include <QHash>
-#include <memory>
 
 #include "qloggerlib_global.h"
 #include "configuration.h"
@@ -85,12 +83,12 @@ public:
     //! \param fileNameMask - the file name of the log, if applicable
     //! \param fileNameTimestampFormat - the timestamp format of the filename
     //! \param filePath - the file path if applicable
-    //! \param fileMaxSizeInKb - the max size per file in kb
+    //! \param fileMaxSizeInBytes - the max size per file in bytes
     //!
     static void addLogger(QString logOwner, Level lvl, OutputType ouputType = CONSOLE, QString logTextMask = DEFAULT_TEXT_MASK,
-                          QString timestampFormat = TIMESTAMP_QLOGGER_FORMAT, QString fileNameMask = TEXT_FILE_NAME_MASK,
+                          QString timestampFormat = DEFAULT_TIMESTAMP_FORMAT, QString fileNameMask = TEXT_FILE_NAME_MASK,
                           QString fileNameTimestampFormat = FILE_NAME_TIMESTAMP_FORMAT, QString filePath = DEFAULT_LOG_PATH,
-                          int fileMaxSizeInKb = DEFAULT_FILE_SIZE);
+                          qint64 fileMaxSizeInBytes = DEFAULT_FILE_SIZE_MB);
 
     //!
     //! \brief log - the generic method to log a message to a specific level

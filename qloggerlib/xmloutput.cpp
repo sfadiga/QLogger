@@ -28,7 +28,6 @@
 #include <QDateTime>
 #include <QTextCodec>
 
-
 namespace qlogger
 {
 
@@ -54,7 +53,9 @@ void XmlOutput::write(const QString message,
                       const QString functionName,
                       const int lineNumber)
 {
-    if(!outputFile.isNull() && outputFile->isOpen() && (outputFile->size() > (configuration->getFileMaxSizeInKb() * 1024)))
+    if(!outputFile.isNull()
+            && outputFile->isOpen()
+            && (outputFile->size() > configuration->getFileMaxSizeInBytes()))
     {
         // end current xml file.
         *outputStream << ROOT_CLOSE_TAG << endl;
@@ -62,7 +63,7 @@ void XmlOutput::write(const QString message,
 
     if(outputFile.isNull() //if there is no file
             || !outputFile->isOpen() // or the file is not opened for writing
-            || (outputFile->size() > (configuration->getFileMaxSizeInKb() * 1024))) // or the file is already at max size
+            || (outputFile->size() > configuration->getFileMaxSizeInBytes())) // or the file is already at max size
     {
         createNextFile(); // create a new file
 

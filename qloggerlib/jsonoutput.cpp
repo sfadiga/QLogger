@@ -21,6 +21,8 @@
 */
 #include "jsonoutput.h"
 
+#include <QDateTime>
+
 namespace qlogger
 {
 
@@ -34,55 +36,46 @@ JSONOutput::~JSONOutput()
     if(!outputFile.isNull() && outputFile->isOpen())
     {
         // end current json file.
-        close();
+        *outputStream << endl << JSON_FILE_END << endl;
     }
     PlainTextOutput::close();
-}
-
-void JSONOutput::close()
-{
-    if(!outputFile.isNull())
-    {
-        // end current json file.
-        jsonCurrentLog[JSON_LOGS] = jsonCurrentList;
-
-        QJsonDocument jsonDoc(jsonCurrentLog);
-        outputFile->write(jsonDoc.toJson());
-        // release the file
-        outputFile->close();
-        // clean the json objects
-        jsonCurrentLog.empty();
-        jsonCurrentList.empty();
-    }
 }
 
 void JSONOutput::write(const QString message, const QString owner,
                        const Level lvl, const QDateTime timestamp,
                        const QString functionName, const int lineNumber)
 {
-
     if(!outputFile.isNull()
             && outputFile->isOpen()
-            && (outputFile->size() > (configuration->getFileMaxSizeInKb() * 1024)))
+            && (outputFile->size() > configuration->getFileMaxSizeInBytes()))
     {
-        close();
+        // end current json file.
+        *outputStream << endl << JSON_FILE_END << endl;
     }
 
     if(outputFile.isNull() //if there is no file
             || !outputFile->isOpen() // or the file is not opened for writing
-            || (outputFile->size() > (configuration->getFileMaxSizeInKb() * 1024))) // or the file is already at max size
+            || (outputFile->size() > configuration->getFileMaxSizeInBytes())) // or the file is already at max size
     {
         createNextFile(); // create a new file
-    }
 
-    QJsonObject json;
-    json[JSON_LINE] = lineNumber;
-    json[JSON_FUNCTION] = functionName;
-    json[JSON_DATE_TIME] = timestamp.toString(configuration->getTimestampFormat());
-    json[JSON_LEVEL] = levelToString(lvl);
-    json[JSON_MESSAGE] = message;
-    json[JSON_OWNER] = owner;
-    jsonCurrentList.append(json);
+        // start the xml file.
+        *outputStream << JSON_FILE_START << endl;
+        // the first line will start without adding the comma
+        QString lineNumberStr = QString("%1").arg(lineNumber);
+        *outputStream << JSON_LOG_ENTRY.arg(owner, levelToString(lvl),
+                                            message, timestamp.toString(configuration->getTimestampFormat()),
+                                            functionName, lineNumberStr);
+    }
+    else // continues the file normally
+    {
+        // adds a comma and jump to the next line, in the end of the file there will be no comma
+        *outputStream << "," << endl;
+        QString lineNumberStr = QString("%1").arg(lineNumber);
+        *outputStream << JSON_LOG_ENTRY.arg(owner, levelToString(lvl),
+                                            message, timestamp.toString(configuration->getTimestampFormat()),
+                                            functionName, lineNumberStr);
+    }
 }
 
 }

@@ -86,27 +86,27 @@ static const QString CH_FILE_NAME_TIMESTAMP = "fileNameTimeStamp";
 static const QString CH_CONFIG_FILE_NAME = "qlogger.ini";
 
 //!
-static const QString TIMESTAMP_QLOGGER_FORMAT = "MM/dd/yyyy hh:mm:ss"; //! default log timestamp output format
+static const QString DEFAULT_TIMESTAMP_FORMAT = "MM/dd/yyyy hh:mm:ss"; //! default log timestamp output format
 
 //! %m - message %l - level %o - owner %t - datetime
 static const QString DEFAULT_TEXT_MASK = "%t [%o] <%l> (%f) {line:%n} - %m";
 
-//! log_appname_logname_datetime.txt %1 = application name , %2 = owner , %3 = timestamp
-static const QString TEXT_FILE_NAME_MASK = "log_%1_%2_%3.txt";
-
 //! default as the application path
 static const QString DEFAULT_LOG_PATH = ".";
 
-//!
-static const int DEFAULT_FILE_SIZE = 1000;
+//! default size of the output log file = 1Mb
+static const qint64 DEFAULT_FILE_SIZE_MB = 1000000;
 
 //! will be used on the file name mask
 static const QString FILE_NAME_TIMESTAMP_FORMAT = "yyyyMMdd_hhmmss";
 
 //! log_appname_logname_datetime.txt %1 = application name , %2 = owner , %3 = timestamp
+static const QString TEXT_FILE_NAME_MASK = "log_%1_%2_%3.txt";
+
+//! log_appname_logname_datetime.txt %1 = application name , %2 = owner , %3 = timestamp
 static const QString XML_FILE_NAME_MASK = "log_%1_%2_%3.xml";
 
-//!
+//! XML tags
 static const QString XML_TAG = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 static const QString ROOT_OPEN_TAG = "<LOGS>";
 static const QString ROOT_CLOSE_TAG = "</LOGS>";
@@ -122,13 +122,17 @@ static const QString LEVEL_TAG = "<LEVEL>%1</LEVEL>";
 //! log_appname_logname_datetime.txt %1 = application name , %2 = owner , %3 = timestamp
 static const QString JSON_FILE_NAME_MASK = "log_%1_%2_%3.json";
 
-static const QString JSON_DATE_TIME = "dateTime";
-static const QString JSON_OWNER = "owner";
-static const QString JSON_MESSAGE = "message";
-static const QString JSON_LINE = "line";
-static const QString JSON_FUNCTION = "function";
-static const QString JSON_LEVEL = "level";
-static const QString JSON_LOGS = "logs";
+static const QString JSON_LOG_ENTRY = "{ "
+                                      "\"owner:\" \"%1\","
+                                      "\"level:\" \"%2\","
+                                      "\"message:\" \"%3\","
+                                      "\"dateTime:\" \"%4\","
+                                      "\"function:\" \"%5\","
+                                      "\"line:\" \"%6\" "
+                                      " }";
+static QString JSON_FILE_START = "{ \"logs\": [ ";
+static QString JSON_FILE_END = " ] }";
+
 
 //! utility to convert the level enum to string
 inline static QString levelToString(const Level level)

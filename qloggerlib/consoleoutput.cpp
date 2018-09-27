@@ -22,10 +22,6 @@
 #include "consoleoutput.h"
 
 #include <QDateTime>
-#include <QFile>
-#include <QDir>
-#include <iostream>
-#include <QTextCodec>
 
 #include "configuration.h"
 

@@ -24,9 +24,7 @@
 
 #include "output.h"
 
-#include <QCoreApplication>
 #include <QTextStream>
-#include <QFile>
 
 using namespace std;
 

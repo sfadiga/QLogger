@@ -112,7 +112,12 @@ Example of a configuration file for QLogger:
 level=warn
 outputType=text
 
-# 10mb file
+# in this option is possible to pass file sizes in plain int (number of bytes) or with the following 
+# options: x Mb, xM, xm, xMB, x mb, xKB, xk, xK, xKb, xkb, xg, xG, xgb, xGb, xGB as x being a number.
+# examples: 100 kb, 100k, 10M, 1MB, 5g, 10 Mb...           
+# 100 kb file
+maxFileSize=100k
+path=c:/temp/
 maxFileSize=10000
 path=c:/temp/
 

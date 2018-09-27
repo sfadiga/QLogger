@@ -22,10 +22,10 @@
 
 #include "qlogger.h"
 
-#include <QDateTime>
-#include <QTextCodec>
 #include <QDirIterator>
 #include <QSettings>
+#include <QRegularExpression>
+#include <QDateTime>
 
 #include "consoleoutput.h"
 #include "textoutput.h"
@@ -85,7 +85,7 @@ void QLogger::addLogger(Configuration* configuration, OutputType type)
                            configuration->getFileNameMask(),
                            configuration->getFileNameTimestampFormat(),
                            configuration->getFilePath(),
-                           configuration->getFileMaxSizeInKb());
+                           configuration->getFileMaxSizeInBytes());
         delete configuration;
     }
 }
@@ -97,14 +97,14 @@ void QLogger::addLogger(QString logOwner)
 
 void QLogger::addLogger(QString logOwner, Level lvl, OutputType ouputType,
                         QString logTextMask, QString timestampFormat, QString fileNameMask,
-                        QString fileNameTimestampFormat, QString filePath, int fileMaxSizeInKb)
+                        QString fileNameTimestampFormat, QString filePath, qint64 fileMaxSizeInBytes)
 {
     Configuration* configuration = new Configuration(std::move(logOwner), lvl,
                                                      std::move(logTextMask),
                                                      std::move(timestampFormat),
                                                      std::move(fileNameMask),
                                                      std::move(fileNameTimestampFormat),
-                                                     std::move(filePath), fileMaxSizeInKb);
+                                                     std::move(filePath), fileMaxSizeInBytes);
     Output* output = nullptr;
     switch(ouputType)
     {
@@ -206,17 +206,51 @@ void QLogger::readConfigurationFile()
             QString level = settings.value(CH_LEVEL, ERROR_LEVEL).toString();
             QString outStr = settings.value(CH_OUTPUT_TYPE, CONSOLE_OUTPUT).toString(); //console
             QString mask = settings.value(CH_LOG_MASK, DEFAULT_TEXT_MASK).toString();
-            QString timestamp = settings.value(CH_TIMESTAMP_FORMAT, TIMESTAMP_QLOGGER_FORMAT).toString();
+            QString timestamp = settings.value(CH_TIMESTAMP_FORMAT, DEFAULT_TIMESTAMP_FORMAT).toString();
             QString fileName = settings.value(CH_FILE_NAME, TEXT_FILE_NAME_MASK).toString();
             QString fileTimestamp = settings.value(CH_FILE_NAME_TIMESTAMP, FILE_NAME_TIMESTAMP_FORMAT).toString();
             QString path = settings.value(CH_PATH, DEFAULT_LOG_PATH).toString();
-            int fileSize = settings.value(CH_MAX_FILE_SIZE, DEFAULT_FILE_SIZE).toInt();
+            QString fileSizeStr = settings.value(CH_MAX_FILE_SIZE).toString();
+
+            // in this option is possible to pass file sizes in plain int (number of bytes) or with the following options
+            // x Mb, xM, xm, xMB, x mb, xKB, xk, xK, xKb, xkb, xg, xG, xgb, xGb, xGB as x being the desired number.
+            QRegularExpression splitNumbers("^(\\d+)|\\s?([KMGkmg]{1,1}[Bb]{0,1})$");
+            //if fails to consume considers the default;
+            qint64 fileSize = DEFAULT_FILE_SIZE_MB;
+            QRegularExpressionMatchIterator matchIt = splitNumbers.globalMatch(fileSizeStr);
+            qint64 multiplier = 1;
+            bool isOk = false;
+            qint64 tempSize = 0;
+            while(matchIt.hasNext())
+            {
+                QRegularExpressionMatch match = matchIt.next();
+                QString token = match.captured();
+                tempSize = token.toLong(&isOk);
+                if(!isOk)
+                {
+                    if(token.contains('k', Qt::CaseInsensitive))
+                    {
+                        multiplier = 1000; // 1kb
+                    }
+                    else if(token.contains('m', Qt::CaseInsensitive))
+                    {
+                        multiplier = 1000000; // 1mb
+                    }
+                    else if(token.contains('g', Qt::CaseInsensitive))
+                    {
+                        multiplier = 1000000000; // 1gb
+                    }
+                }
+                else
+                {
+                    fileSize = tempSize;
+                }
+            }
+            fileSize *= multiplier;
         settings.endGroup();
-        instance().addLogger((*it), levelFromString(level), ouputFromString(outStr), mask, timestamp, fileName, fileTimestamp, path, fileSize);
+        QLogger::addLogger((*it), levelFromString(level), ouputFromString(outStr), mask, timestamp, fileName, fileTimestamp, path, fileSize);
     }
 
 }
-
-
 
 }

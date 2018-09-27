@@ -23,11 +23,6 @@
 #define JSONOUTPUT_H
 
 #include "textoutput.h"
-#include <QDateTime>
-
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
 
 namespace qlogger {
 
@@ -61,22 +56,6 @@ public:
     void write(const QString message, const QString owner,
                const Level lvl, const QDateTime timestamp,
                const QString functionName, const int lineNumber);
-    // Output interface
-    //!
-    //! \brief close
-    //!
-    void close();
-
-private:
-    //!
-    //! \brief jsonCurrentLog
-    //!
-    QJsonObject jsonCurrentLog;
-    //!
-    //! \brief jsonCurrentList
-    //!
-    QJsonArray jsonCurrentList;
-
 };
 
 }

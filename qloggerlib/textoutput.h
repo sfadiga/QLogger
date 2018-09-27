@@ -22,8 +22,6 @@
 #ifndef TEXTOUTPUT_H
 #define TEXTOUTPUT_H
 
-#include <QCoreApplication>
-#include <QTextStream>
 #include <QFile>
 
 #include "consoleoutput.h"

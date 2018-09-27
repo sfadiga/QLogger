@@ -25,9 +25,7 @@
 #include "configuration.h"
 
 #include <QDateTime>
-#include <QFile>
 #include <QDir>
-#include <iostream>
 #include <QTextCodec>
 
 using namespace std;
@@ -79,7 +77,7 @@ void PlainTextOutput::write(const QString message,
 {
     if(outputFile.isNull() //if there is no file
             || !outputFile->isOpen() // or the file is not opened for writing
-            || (outputFile->size() > (configuration->getFileMaxSizeInKb() * 1024))) // or the file is already at max size
+            || (outputFile->size() > configuration->getFileMaxSizeInBytes())) // or the file is already at max size
     {
         createNextFile(); // create a new file
     }

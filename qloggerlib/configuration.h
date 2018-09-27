@@ -52,11 +52,11 @@ public:
     //!
     Configuration(QString logOwner, Level lvl = q1ERROR,
                   QString logTextMask = DEFAULT_TEXT_MASK,
-                  QString timestampFormat = TIMESTAMP_QLOGGER_FORMAT,
+                  QString timestampFormat = DEFAULT_TIMESTAMP_FORMAT,
                   QString fileNameMask = TEXT_FILE_NAME_MASK,
                   QString fileNameTimestampFormat = FILE_NAME_TIMESTAMP_FORMAT,
                   QString filePath = DEFAULT_LOG_PATH,
-                  int fileMaxSizeInKb = DEFAULT_FILE_SIZE);
+                  qint64 maxSizeInBytes = DEFAULT_FILE_SIZE_MB);
 
 
     //!destructor as default since not much to do here.
@@ -98,8 +98,8 @@ public:
     QString getFilePath() const;
     void setFilePath(const QString &value);
 
-    int getFileMaxSizeInKb() const;
-    void setFileMaxSizeInKb(int value);
+    qint64 getFileMaxSizeInBytes() const;
+    void setFileMaxSizeInBytes(qint64 value);
 
 private:
 
@@ -139,9 +139,9 @@ private:
     QString filePath;
 
     //!
-    //! \brief fileMaxSizeInKb - the max sizes of the log output file
+    //! \brief fileMaxSizeInBytes - the max size in bytes of the log output file
     //!
-    int fileMaxSizeInKb;
+    qint64 fileMaxSizeInBytes;
 
 };
 

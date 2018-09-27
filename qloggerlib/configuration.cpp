@@ -32,11 +32,11 @@ Configuration::Configuration(QString logOwner,
                              QString fileMask,
                              QString fileTimestampFormat,
                              QString path,
-                             int maxSizeInKb)
+                             qint64 maxSizeInBytes)
     : logOwner(std::move(logOwner)), logLevel(lvl),
       logTextMask(std::move(textMask)), timestampFormat(std::move(timestampFormat)),
       fileNameMask(std::move(fileMask)), fileNameTimestampFormat(std::move(fileTimestampFormat)),
-      filePath(std::move(path)), fileMaxSizeInKb(maxSizeInKb)
+      filePath(std::move(path)), fileMaxSizeInBytes(maxSizeInBytes)
 {
 }
 
@@ -50,14 +50,14 @@ bool Configuration::validate()
     return !(logOwner.isEmpty() || logTextMask.isEmpty() || timestampFormat.isEmpty());
 }
 
-int Configuration::getFileMaxSizeInKb() const
+qint64 Configuration::getFileMaxSizeInBytes() const
 {
-    return fileMaxSizeInKb;
+    return fileMaxSizeInBytes;
 }
 
-void Configuration::setFileMaxSizeInKb(int value)
+void Configuration::setFileMaxSizeInBytes(qint64 value)
 {
-    fileMaxSizeInKb = value;
+    fileMaxSizeInBytes = value;
 }
 
 QString Configuration::getFilePath() const
@@ -129,7 +129,5 @@ void Configuration::setLogOwner(const QString &value)
 {
     logOwner = value;
 }
-
-
 
 }

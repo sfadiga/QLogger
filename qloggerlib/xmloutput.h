@@ -25,7 +25,6 @@
 #include "textoutput.h"
 
 #include <QXmlStreamWriter>
-#include <QDir>
 
 namespace qlogger
 {
